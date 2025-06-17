@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  php-apache:
+    image: webdevops/php-apache-dev:8.2-alpine
+    container_name: api-laravel-back
+    restart: always
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/app
+    networks:
+      - laravel_net
+  postgresql:
+    image: postgres:latest
+    container_name: postgres-laravel
+    restart: always
+    environment:
+      POSTGRES_DB: laravelSite
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASS}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - laravel_net
+
+volumes:
+  postgres_data:
+
+networks:
+  laravel_net:
